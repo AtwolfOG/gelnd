@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #daa06d;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  min-height: 100%;
+  --bg-dark: oklch(0.92 0.1 68);
+  --bg: oklch(0.96 0.1 68);
+  --bg-light: oklch(1 0.1 68);
+  --text: oklch(0.15 0.2 68);
+  --text-muted: oklch(0.4 0.2 68);
+  --highlight: oklch(1 0.2 68);
+  --border: oklch(0.6 0.2 68);
+  --border-muted: oklch(0.7 0.2 68);
+  --primary: oklch(0.4 0.2 68);
+  --secondary: oklch(0.4 0.2 248);
+  --danger: oklch(0.5 0.2 30);
+  --warning: oklch(0.5 0.2 100);
+  --success: oklch(0.5 0.2 160);
+  --info: oklch(0.5 0.2 260);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: white;
+  font-family: var(--font-roboto), sans-serif;
+  min-height: 100vh;
+  /* width: 100%; */
+}
+h1 {
+  font-size: 32px;
+  /* color: #3b2a13; */
+  color: var(--text-muted);
+}
+h2 {
+  font-size: 22px;
+  /* color: #d47a2c8e; */
+  color: var(--text-muted);
+}
+p {
+  font-size: 16px;
+  /* color: #1f1f1f; */
+  color: var(--text);
+}
+.hero {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.3)),
+    url("/images/hero2.png") center;
+  background-size: cover;
+}
+
+:root {
+  /* --bg-color: #e5bf8d;
+  --card-bg: hsl(34, 63%, 65%); */
+  --title-color: #3b2a13;
+  --subtitle-color: #6e3c1b;
+  --text-color: #1f1f1f;
+  --accent-color: #d47a2c;
+}
+
+/* body {
+  background-color: var(--bg-color);
+  font-family: "Poppins", sans-serif;
+} */
+
+.testimonials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+}
+
+.testimonial-card {
+  max-width: 600px;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  border: 2px solid var(--accent-color);
+}
+
+.testimonial-user h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--title-color);
+}
+
+.testimonial-user span {
+  font-size: 0.9rem;
+  color: var(--subtitle-color);
+}
+
+blockquote {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  font-style: italic;
+  margin: 0 0 1rem;
+  line-height: 1.6;
+  position: relative;
+}
+
+blockquote::before {
+  content: "“";
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  position: absolute;
+  left: -0.8rem;
+  top: -0.5rem;
+}
+
+.subtitle {
+  color: var(--accent-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: right;
+  margin-top: 1rem;
+}
+.slide-in {
+  animation-timeline: view();
+  animation-range-start: entry 10% !important;
+  animation-range-end: entry 40% !important;
+  animation: slide-in both linear;
+}
+@keyframes slide-in {
+  0% {
+    translate: 0 50px;
+    filter: blur(15px);
+  }
+  100% {
+    translate: 0 0;
+    filter: blur(0);
+  }
 }

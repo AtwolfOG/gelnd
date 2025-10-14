@@ -1,103 +1,105 @@
 import Image from "next/image";
+import Card from "./card";
+import JoinBtn from "@/components/joinBtn";
+interface cardType {
+  src: string;
+  title: string;
+  text: string;
+}
+const cardData: cardType[] = [
+  {
+    src: "/images/image5.jpg",
+    title: "Measure & Track Your Time",
+    text: "Log the time you spend in Bible study and prayer to build daily habits that strengthen your faith.",
+  },
+  {
+    src: "/images/image2.jpg",
+    title: "Document Your Journey",
+    text: "Keep a personal spiritual journal. Reflect on what God is doing in your life over time.",
+  },
+  {
+    src: "/images/image1.jpg",
+    title: "See Your Growth",
+    text: "Gain clear insight into your spiritual habits through visual charts and reports.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+      <div className="w-full min-h-[300px] h-[70vh]  bg-cover bg-center flex flex-col justify-center px-5 sm:px-10 items-start hero">
+        <h1 className="text-(--accent-color)!">
+          Grow in Your Faith with Intentionality.
+        </h1>
+        <h2 className="max-w-[40ch] mb-6">
+          Track your time spent in Bible study and prayer, journal your
+          revelations, and reflect on your spiritual growth — all in one
+          peaceful place.
+        </h2>
+        <JoinBtn>Start Your Journey Today</JoinBtn>
+      </div>
+      <div className="grid gap-5 grid-cols-[repeat(auto-fit,_minmax(320px,500px))] p-10 py-20 justify-center md:grid-cols-[minmax(375px,400px)_350px] md:mt-15 lg:grid-cols-[460px_350px]">
+        <div className="flex flex-col max-w-[470px] py-3 px-2 gap-3">
+          <h2>Build a Consistent and Meaningful Spiritual Life</h2>
+          <p className="">
+            Staying consistent in your spiritual journey can be challenging,
+            distractions, busy schedules, and lack of structure can make it hard
+            to grow.
+          </p>
+          <p>
+            This app gives you a personal space to focus, reflect, and stay
+            accountable to your walk with God.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <Image src={"/images/hero1.png"} width={350} height={400} alt="" />
+      </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,320px))] gap-x-5 gap-y-10 justify-center my-10">
+        {cardData.map((data) => (
+          <Card
+            key={data.title}
+            src={data.src}
+            title={data.title}
+            text={data.text}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        ))}
+      </div>
+      <section id="testimonials" className="testimonials ">
+        <div className="testimonial-card bg-(--bg-dark)">
+          <div className="testimonial-header">
+            <Image
+              src="/images/profile.jpg"
+              alt="User avatar"
+              width={50}
+              height={50}
+              className="testimonial-avatar"
+            />
+            <div className="testimonial-user">
+              <h4>A Grateful User</h4>
+              <span>Faithful App User</span>
+            </div>
+          </div>
+
+          <blockquote>
+            “This app helped me stay consistent with my quiet time and actually
+            see how I was growing spiritually. It’s like a daily reminder to
+            stay connected.”
+          </blockquote>
+
+          <p className="subtitle">
+            Faith grows stronger when nurtured intentionally.
+          </p>
+        </div>
+      </section>
+      <section className="">
+        <div className=" m-auto bg-(--bg-dark) w-[80vw] px-10 pt-20 pb-10 rounded-2xl">
+          <h1>Your Journey with God Matters.</h1>
+          <h2 className="max-w-[500px] mb-10">
+            Start today — not just to track your time, but to deepen your faith
+            intentionally.
+          </h2>
+          <JoinBtn>Create free account</JoinBtn>
+        </div>
+      </section>
+    </>
   );
 }
