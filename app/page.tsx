@@ -1,41 +1,28 @@
 import Image from "next/image";
-import Card from "./card";
+import { Cards } from "../components/card";
 import JoinBtn from "@/components/joinBtn";
-interface cardType {
-  src: string;
-  title: string;
-  text: string;
-}
-const cardData: cardType[] = [
-  {
-    src: "/images/image5.jpg",
-    title: "Measure & Track Your Time",
-    text: "Log the time you spend in Bible study and prayer to build daily habits that strengthen your faith.",
-  },
-  {
-    src: "/images/image2.jpg",
-    title: "Document Your Journey",
-    text: "Keep a personal spiritual journal. Reflect on what God is doing in your life over time.",
-  },
-  {
-    src: "/images/image1.jpg",
-    title: "See Your Growth",
-    text: "Gain clear insight into your spiritual habits through visual charts and reports.",
-  },
-];
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import Guide from "@/components/guide";
+import Benefits from "@/components/benefits";
+import CTA from "@/components/cta";
+import { PiBookOpenThin } from "react-icons/pi";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   return (
     <>
-      <div className="w-full min-h-[300px] h-[70vh]  bg-cover bg-center flex flex-col justify-center px-5 sm:px-10 items-start hero">
-        <h1 className="text-(--accent-color)!">
-          Grow in Your Faith with Intentionality.
-        </h1>
-        <h2 className="max-w-[40ch] mb-6">
-          Track your time spent in Bible study and prayer, journal your
-          revelations, and reflect on your spiritual growth — all in one
-          peaceful place.
-        </h2>
+      <Navbar />
+
+      <div className="w-full min-h-[300px] h-[80vh]  bg-cover bg-center flex flex-col justify-center px-5 sm:px-10 items-start hero">
+        <div className="mb-3">
+          <h1 className="text-(--accent-color)">Deepen Your Faith,</h1>
+          <h1 className="text-(--accent-color)">Track Your Spiritual Growth</h1>
+        </div>
+        <p className="max-w-[40ch] mb-6">
+          Transform your spiritual practice with intentional time tracking,
+          meaningful insights, and a digital journal for your journey with God.
+        </p>
         <JoinBtn>Start Your Journey Today</JoinBtn>
       </div>
       <div className="grid gap-5 grid-cols-[repeat(auto-fit,_minmax(320px,500px))] p-10 py-20 justify-center md:grid-cols-[minmax(375px,400px)_350px] md:mt-15 lg:grid-cols-[460px_350px]">
@@ -53,50 +40,20 @@ export default function Home() {
         </div>
         <Image src={"/images/hero1.png"} width={350} height={400} alt="" />
       </div>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,320px))] gap-x-5 gap-y-10 justify-center my-10">
-        {cardData.map((data) => (
-          <Card
-            key={data.title}
-            src={data.src}
-            title={data.title}
-            text={data.text}
-          />
-        ))}
-      </div>
-      <section id="testimonials" className="testimonials ">
-        <div className="testimonial-card bg-(--bg-dark)">
-          <div className="testimonial-header">
-            <Image
-              src="/images/profile.jpg"
-              alt="User avatar"
-              width={50}
-              height={50}
-              className="testimonial-avatar"
-            />
-            <div className="testimonial-user">
-              <h4>A Grateful User</h4>
-              <span>Faithful App User</span>
-            </div>
-          </div>
-
-          <blockquote>
-            “This app helped me stay consistent with my quiet time and actually
-            see how I was growing spiritually. It’s like a daily reminder to
-            stay connected.”
-          </blockquote>
-
-          <p className="subtitle">
-            Faith grows stronger when nurtured intentionally.
-          </p>
-        </div>
-      </section>
+      <Cards />
+      <Guide />
+      <Benefits />
+      <CTA />
       <section className="">
         <div className=" m-auto bg-(--bg-dark) w-[80vw] px-10 pt-20 pb-10 rounded-2xl">
-          <h1>Your Journey with God Matters.</h1>
-          <h2 className="max-w-[500px] mb-10">
-            Start today — not just to track your time, but to deepen your faith
-            intentionally.
-          </h2>
+          <h1 className="flex items-center gap-2">
+            <PiBookOpenThin className="inline text-(--border-muted)" />{" "}
+            <span className="logo">GELND</span>
+          </h1>
+          <p className="max-w-[20ch] mb-10">
+            Empowering believers to grow deeper in their faith through
+            intentional spiritual tracking.
+          </p>
           <JoinBtn>Create free account</JoinBtn>
         </div>
       </section>

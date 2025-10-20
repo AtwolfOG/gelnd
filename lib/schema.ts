@@ -7,31 +7,9 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     username: {
       type: String,
       required: true,
-      unique: true,
-    },
-    isverified: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
-    verificationtoken: {
-      type: String,
-    },
-    verificationtokenexp: {
-      type: String,
-    },
-    passwordresettoken: {
-      type: String,
-    },
-    passworderesettokenexp: {
-      type: String,
     },
   },
   {

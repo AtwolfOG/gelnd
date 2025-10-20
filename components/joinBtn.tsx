@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function JoinBtn({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   function handleClick() {
-    router.push("login");
+    router.push("signup");
   }
   return (
     <button
