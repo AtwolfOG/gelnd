@@ -33,7 +33,7 @@ function GuideCard({ title, index, text }: cardType) {
 
 export default function Guide() {
   return (
-    <section className="my-25 py-10 px-2 text-center">
+    <section id="guide" className="my-15 py-20 px-2 text-center">
       <h1>Simple, Intentional, Transformative</h1>
       <p>
         Three easy steps to start tracking, and deepening your spiritual journey

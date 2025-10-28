@@ -8,9 +8,9 @@ export default function Navbar() {
       <div className="absolute w-full flex justify-between py-3 px-2 backdrop-blur-2xl md:px-6">
         <h1 className="logo">GELND</h1>
         <ul className="flex justify-center items-center">
-          <Item>Features</Item>
-          <Item>Guide</Item>
-          <Item>Benefits</Item>
+          <Item text="Features" />
+          <Item text="Guide" />
+          <Item text="Benefits" />
         </ul>
         <JoinBtn>Sign in</JoinBtn>
       </div>
@@ -18,10 +18,13 @@ export default function Navbar() {
   );
 }
 
-function Item({ children }: { children: ReactNode }) {
+function Item({ text }: { text: string }) {
   return (
-    <a href="" className="text-white/80 duration-200 hover:text-white p-2">
-      <li>{children}</li>
+    <a
+      href={`#${text.toLowerCase()}`}
+      className="text-white/80 duration-200 hover:text-white p-2"
+    >
+      <li>{text}</li>
     </a>
   );
 }

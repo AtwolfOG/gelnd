@@ -19,7 +19,7 @@ export default function Home() {
           <h1 className="text-(--accent-color)">Deepen Your Faith,</h1>
           <h1 className="text-(--accent-color)">Track Your Spiritual Growth</h1>
         </div>
-        <p className="max-w-[40ch] mb-6">
+        <p className="max-w-[40ch] mb-6 text-(--text-accent)!">
           Transform your spiritual practice with intentional time tracking,
           meaningful insights, and a digital journal for your journey with God.
         </p>

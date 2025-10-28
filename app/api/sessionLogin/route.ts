@@ -1,6 +1,6 @@
 import connectDB from "@/lib/connectDB";
 import { sendverification } from "@/lib/mail";
-import User from "@/lib/schema";
+import { User } from "@/lib/schema";
 import bcrypt from "bcryptjs";
 // import { NextResponse } from "next/server";
 import { NextRequest, NextResponse } from "next/server";

@@ -143,9 +143,9 @@ export default function Signup() {
             </div>
           </div>
           <input
-            className="border-1 px-2 py-2 flex items-center rounded-2xl border-(--border) bg-(--border-light) duration-400 hover:bg-(--border)"
+            className="border-1 px-2 py-2 flex items-center rounded-2xl border-(--border-light) bg-(--border-light) duration-200 hover:bg-(--border-muted)"
             type="submit"
-            value="SUBMIT"
+            value="S U B M I T"
             disabled={isSubmitting || isSubmitSuccessful}
           />
           <div>
@@ -155,7 +155,7 @@ export default function Signup() {
               className="border-1 px-2 py-2 border-(--border) bg-(--border-light) max-w-25 duration-400 hover:border-(--border-muted)"
               onClick={() => signinGoogle(router)}
             >
-              <FcGoogle className="inline" /> Google
+              <FcGoogle className="inline" /> <p className="inline">Google</p>
             </button>
           </div>
         </form>

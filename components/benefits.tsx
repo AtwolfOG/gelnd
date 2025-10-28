@@ -28,7 +28,10 @@ function List({ title, text }: cardDataType) {
 
 export default function Benefits() {
   return (
-    <div className="flex justify-center flex-wrap gap-10 gap-y-20 my-30 px-1">
+    <div
+      id="benefits"
+      className="flex justify-center flex-wrap gap-10 gap-y-20 my-10 py-20 px-1"
+    >
       <div className="flex flex-col gap-5 pl-5 max-w-[400px] ">
         <div>
           <CiHeart className="text-(--border-muted) text-6xl" />

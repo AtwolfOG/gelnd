@@ -64,7 +64,10 @@ export function Card({
 
 export function Cards() {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,320px))] gap-x-5 gap-y-10 justify-center my-10 mx-auto max-w-[1200px] ">
+    <div
+      id="features"
+      className="grid grid-cols-[repeat(auto-fit,minmax(250px,320px))] gap-x-5 gap-y-10 justify-center py-15 mx-auto max-w-[1200px] "
+    >
       {cardData.map((data) => (
         <Card
           key={data.title}
