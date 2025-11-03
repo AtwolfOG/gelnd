@@ -1,10 +1,17 @@
-import { getLastWeekTime, getMonthlydata, getWeekTime } from "@/lib/analytics";
+import {
+  getAllSession,
+  getLastMonthdata,
+  getLastWeekTime,
+  getMonthlydata,
+  getWeekTime,
+} from "@/lib/analytics";
 import type { weeklyDataType } from "./weekchart";
+import type { monthlyDataType } from "./monthChart";
 
 const now = new Date();
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const week = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-
+// remember the time from the db is in minutes
 export async function weeklyChartData() {
   try {
     const currentWeek = new Date();
@@ -13,7 +20,6 @@ export async function weeklyChartData() {
     const lastWeek = new Date(currentWeek);
     lastWeek.setDate(currentWeek.getDate() - 7);
     const weekData = await getWeekTime(currentWeek, timezone);
-    console.log(weekData);
     const lastWeekTime = await getLastWeekTime(lastWeek, currentWeek, timezone);
     const { weeklyData, totalWeekTime } = formatWeekly(weekData);
     return { weeklyData, currentWeekTime: totalWeekTime, lastWeekTime };
@@ -42,8 +48,56 @@ function formatWeekly(weeklyData: weeklyDataType[]) {
   return { weeklyData: newWeekData, totalWeekTime };
 }
 export async function monthlyChartData() {
-  const thisMonth = new Date();
-  thisMonth.setDate(0);
-  thisMonth.setHours(0, 0, 0, 0);
-  const monthlyData = await getMonthlydata(thisMonth, timezone);
+  try {
+    const currentMonth = new Date();
+    currentMonth.setDate(0);
+    currentMonth.setHours(0, 0, 0, 0);
+    const lastMonth = new Date(currentMonth);
+    lastMonth.setMonth(currentMonth.getMonth() - 1);
+    const monthData = await getMonthlydata(currentMonth, timezone);
+    const lastMonthTime: number = await getLastMonthdata(
+      currentMonth,
+      lastMonth,
+      timezone
+    );
+    const { monthlyData, totalMonthTime } = formatMonthly(monthData);
+    return { monthlyData, currentMonthTime: totalMonthTime, lastMonthTime };
+  } catch (error) {
+    throw error;
+  }
+}
+
+function formatMonthly(
+  monthlyData: { week: number; bible: number; prayer: number }[]
+) {
+  const newMonthlyData = [];
+  let totalMonthTime = 0;
+  for (let i = 0; i <= 4; i++) {
+    newMonthlyData.push(
+      monthlyData.find((val) => val.week == i + 1) || {
+        week: i + 1,
+        bible: 0,
+        prayer: 0,
+      }
+    );
+    totalMonthTime += newMonthlyData[i].bible + newMonthlyData[i].prayer;
+  }
+  const formattedMonth = newMonthlyData.map((val) => ({
+    ...val,
+    week: `week ${val.week}`,
+  }));
+  return { monthlyData: formattedMonth, totalMonthTime };
+}
+
+export async function allSession() {
+  try {
+    const { session, count } = await getAllSession();
+    const sessionData = [
+      { type: "bible", time: session.bible },
+      { type: "prayer", time: session.prayer },
+    ];
+    return { sessionData, session, count };
+  } catch (error) {
+    throw error;
+  }
 }

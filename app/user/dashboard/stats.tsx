@@ -8,10 +8,16 @@ function getTime(time: number) {
   const hours = Math.floor(time / (1000 * 60 * 60));
   return hours ? `${hours}hr ${minutes}m` : `${minutes}m`;
 }
-export default function Stats() {
-  const num = 2;
-  const time = 3660000;
-  const timeFormat = getTime(time);
+export default function Stats({
+  streak,
+  time,
+  lastActive,
+}: {
+  streak: number;
+  time: number;
+  lastActive: Date;
+}) {
+  const timeFormat = getTime(time || 0);
 
   return (
     <div className="flex flex-wrap gap-3 my-7">
@@ -21,7 +27,7 @@ export default function Stats() {
             <PiNotepadLight className="text-4xl bg-(--bg) rounded-lg text-(--border-light) p-1" />
             <div>
               <h4>Current Streak</h4>
-              <p>{num + " Day" + (num > 1 ? "s" : "")}</p>
+              <p>{streak + " Day" + (streak > 1 ? "s" : "")}</p>
               <p className="mt-3">Keep going</p>
             </div>
           </div>
@@ -32,9 +38,9 @@ export default function Stats() {
           <div className="flex gap-3">
             <IoMdTime className="text-4xl bg-(--bg) rounded-lg text-(--border-light) p-1" />
             <div>
-              <h4>This week</h4>
+              <h4>Total time</h4>
               <p>{timeFormat}</p>
-              <p className="mt-3">+23% from last week</p>
+              <p className="mt-3">across all session</p>
             </div>
           </div>
         </div>
@@ -44,9 +50,13 @@ export default function Stats() {
           <div className="flex gap-3">
             <LuTrendingUp className="text-4xl bg-(--bg) rounded-lg text-(--border-light) p-1" />
             <div>
-              <h4>Current Streak</h4>
-              <p>{num + " Day" + (num > 1 ? "s" : "")}</p>
-              <p className="mt-3">All time tracking</p>
+              <h4>Reminder</h4>
+              <p>
+                {lastActive
+                  ? new Date(lastActive).toLocaleString()
+                  : "you have no session yet"}
+              </p>
+              <p className="mt-3">last session</p>
             </div>
           </div>
         </div>

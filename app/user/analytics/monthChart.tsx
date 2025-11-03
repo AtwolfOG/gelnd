@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-export interface weeklyDataType {
-  day: string;
+export interface monthlyDataType {
+  week: string;
   bible: number;
   prayer: number;
 }
@@ -21,16 +21,21 @@ const config = {
     color: "#0074d3",
   },
 };
-export default function WeekChart({
-  weekData,
+export default function MonthChart({
+  monthData,
 }: {
-  weekData: weeklyDataType[];
+  monthData: monthlyDataType[];
 }) {
   return (
     <ChartContainer config={config} className="min-h-[100px] w-full">
-      <BarChart accessibilityLayer data={weekData}>
+      <BarChart accessibilityLayer data={monthData}>
         <CartesianGrid />
-        <XAxis dataKey="day" tickLine={true} tickMargin={10} axisLine={false} />
+        <XAxis
+          dataKey="week"
+          tickLine={true}
+          tickMargin={10}
+          axisLine={false}
+        />
         <Bar dataKey="bible" fill="var(--chart-bible)" radius={4} />
         <Bar dataKey="prayer" fill="var(--chart-prayer)" radius={4} />
         <ChartTooltip

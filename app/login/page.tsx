@@ -1,8 +1,8 @@
 import { getUserId } from "@/lib/analytics";
-import Signup from "./signup";
+import Login from "./login";
 import { redirect } from "next/navigation";
 
-export default async function page() {
+export default async function Page() {
   try {
     const userId = await getUserId();
     if (userId) {
@@ -13,5 +13,5 @@ export default async function page() {
       throw error;
     }
   }
-  return <Signup />;
+  return <Login />;
 }

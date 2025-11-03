@@ -5,6 +5,10 @@ import { Activity, Note, User } from "./schema";
 import { verifySession } from "./verify";
 import { revalidatePath } from "next/cache";
 import connectDB from "./connectDB";
+import { Types } from "mongoose";
+import mongoose from "mongoose";
+import { Worker } from "worker_threads";
+import path from "path";
 
 export async function createSession({
   type,
@@ -14,15 +18,10 @@ export async function createSession({
   entry: string;
 }) {
   try {
-    await connectDB();
-    const decoded = await verifySession();
-    if (!decoded) throw new Error("User not logged in");
-    const user = await User.findOne({ email: decoded?.email });
-    if (!user) throw new Error("invalid user");
-    const id = user._id;
+    const { userId } = await getUserId();
     const activity = new Activity({
       type,
-      user: id,
+      user: userId,
       entry,
     });
     await activity.save();
@@ -69,12 +68,40 @@ export async function saveSession(time: number) {
     // updating the times spent to the db
     const { cookie, id } = await getIdandCookie();
     await connectDB();
-    await Activity.findByIdAndUpdate(id, { time });
+    const activity = await Activity.findByIdAndUpdate(id, { time });
     cookie.delete("session");
+    const { userId } = await getUserId();
+
+    // Spawn a worker to update user's total time and streak asynchronously.
+    try {
+      const workerPath = path.join(process.cwd(), "lib", "worker", "worker.js");
+      const worker = new Worker(workerPath, {
+        workerData: {
+          time,
+          userId,
+          createdAt: activity?.createdAt,
+        },
+        // type: "module",
+      });
+
+      worker.on("message", (msg) => {
+        const m = msg as { error?: string } | undefined;
+        if (m && m.error) {
+          console.error("worker error:", m.error);
+        }
+      });
+      worker.on("error", (err) => console.error("worker thread error:", err));
+      worker.on("exit", (code) => {
+        if (code !== 0) console.error("worker stopped with exit code", code);
+      });
+    } catch (err) {
+      console.error("Failed to spawn worker:", err);
+    }
   } catch (error) {
     throw error;
   }
 }
+
 interface NoteType {
   title: string;
   text: string;
@@ -95,20 +122,19 @@ async function getUserId(): Promise<{ userId: string }> {
 export async function addNote({ title, text, tags }: NoteType) {
   try {
     await connectDB();
-    const { userId } = await getUserId();
+    const { userId: rawUserId } = await getUserId();
+    const userId = rawUserId.toString();
     // getting client session or activity id from cookies
     const { id: sessionId } = await getIdandCookie();
-    // getting only the activity id
-    const { _id: activity } = await Activity.findById(sessionId, { _id: 1 });
     const note = await new Note({
       title,
       text,
-      activity,
+      activity: sessionId,
       user: userId,
       tags,
     });
     await note.save();
-    console.log(note);
+    await Activity.findByIdAndUpdate(sessionId, { $push: { notes: note._id } });
     revalidatePath("/user/dashboard");
   } catch (error) {
     throw error;
@@ -120,7 +146,7 @@ export async function getNote() {
     const { id: sessionId } = await getIdandCookie();
     const notes = await Note.find(
       { activity: sessionId },
-      { title: 1, text: 1, tags: 1 }
+      { title: 1, text: 1, tags: 1, createdAt: 1 }
     );
     return notes;
   } catch (error) {

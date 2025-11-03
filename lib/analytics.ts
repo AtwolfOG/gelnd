@@ -4,16 +4,32 @@ import connectDB from "./connectDB";
 import { Activity, User } from "./schema";
 import { verifySession } from "./verify";
 
-async function getUserId() {
+export async function getUserId() {
   try {
     await connectDB();
     const { email } = await verifySession();
+    if (!email) throw new Error("User not logged in");
     const { _id } = await User.findOne({ email });
+    if (!_id) throw new Error("invalid user");
     return _id;
   } catch (err) {
     throw err;
   }
 }
+
+export async function getUser() {
+  try {
+    await connectDB();
+    const { email } = await verifySession();
+    if (!email) throw new Error("User not logged in");
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("invalid user");
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function getWeekTime(date: Date, format: string) {
   try {
     const _id = await getUserId();
@@ -69,17 +85,16 @@ export async function getWeekTime(date: Date, format: string) {
           },
         },
       },
+      //   this sends minutes to client instead of seconds
       {
         $project: {
           _id: 0,
           day: 1,
-          bible: { $divide: ["$bible", 1000] },
-          prayer: { $divide: ["$prayer", 1000] },
+          bible: { $floor: { $divide: ["$bible", 60000] } },
+          prayer: { $floor: { $divide: ["$prayer", 60000] } },
         },
       },
     ]);
-    console.log("from server action", week);
-    console.log("from server action", date);
     return week;
   } catch (error) {
     throw error;
@@ -108,18 +123,17 @@ export async function getLastWeekTime(
         },
       },
       {
+        // send minutes
         $project: {
           _id: 0,
           time: {
-            $divide: ["$time", 1000],
+            $floor: { $divide: ["$time", 60000] },
           },
         },
       },
     ]);
-    const { time } = week[0];
-    console.log("from server action last week", week);
-    console.log("from server action last week", date);
-    console.log("from server action last week", stopDate);
+    if (!week[0]) return 0;
+    const time = week[0].time;
     return time;
   } catch (error) {
     throw error;
@@ -163,8 +177,8 @@ export async function getMonthlydata(date: Date, timezone: string) {
         $project: {
           _id: 0,
           week: "$_id",
-          bible: { $divide: ["$bible", 1000] },
-          prayer: { $divide: ["$prayer", 1000] },
+          bible: { $floor: { $divide: ["$bible", 60000] } },
+          prayer: { $floor: { $divide: ["$prayer", 60000] } },
         },
       },
       {
@@ -172,8 +186,68 @@ export async function getMonthlydata(date: Date, timezone: string) {
         $sort: { week: 1 },
       },
     ]);
-
     return monthly;
+  } catch (error) {
+    throw error;
+  }
+}
+export async function getLastMonthdata(
+  date: Date,
+  lastMonth: Date,
+  timezone: string
+) {
+  try {
+    const _id = await getUserId();
+    const monthly = await Activity.aggregate([
+      {
+        $match: {
+          user: _id,
+          createdAt: { $gte: date, $lt: lastMonth },
+        },
+      },
+
+      {
+        // Group and sum conditionally
+        $group: {
+          _id: null,
+          time: {
+            $sum: "$time",
+          },
+        },
+      },
+      {
+        // selecting fields to return
+        $project: {
+          _id: 0,
+          time: { $floor: { $divide: ["$time", 60000] } },
+        },
+      },
+    ]);
+
+    return monthly[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAllSession() {
+  try {
+    const _id = await getUserId();
+    const session = await Activity.find({ user: _id }).select({
+      type: 1,
+      time: 1,
+    });
+    const count = session.length;
+    const sessionObj = session.reduce(
+      (acc, { type, time }) => {
+        acc[type] += time;
+        return { ...acc };
+      },
+      { bible: 0, prayer: 0 }
+    );
+    sessionObj.bible = sessionObj.bible / 60000;
+    sessionObj.prayer = sessionObj.prayer / 60000;
+    return { session: sessionObj, count };
   } catch (error) {
     throw error;
   }

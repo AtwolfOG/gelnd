@@ -15,9 +15,9 @@ export default async function TimeSpent() {
     return acc;
   }, {});
   console.log(bible, prayer);
-  const bibleFormat = getTime(bible);
+  const bibleFormat = getTime(bible || 0);
   const prayerFormat = getTime(prayer || 0);
-  const totalFormat = getTime(bible + (prayer || 0));
+  const totalFormat = getTime((bible || 0) + (prayer || 0));
   return (
     <Container>
       <div className="p-2">

@@ -1,11 +1,14 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoMdTime } from "react-icons/io";
 import { IconType } from "react-icons";
 import { LuLayoutDashboard, LuChartColumn, LuPenLine } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
 import { PiSignOutLight } from "react-icons/pi";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { toastError, toastSuccess } from "@/components/toast";
 
 interface LinkType {
   text: string;
@@ -44,8 +47,28 @@ export function Settings() {
 }
 
 export function Signout() {
+  const router = useRouter();
+  async function handleSignOut() {
+    try {
+      await signOut(auth);
+      const res = await fetch("/api/sessionLogout", {
+        method: "POST",
+      });
+      const data = res.json();
+      if (res.ok) {
+        toastSuccess("User Successfully logged out");
+        router.push("/");
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      let errorMsg = "An unexpected error occured";
+      if (error instanceof Error) errorMsg = error.message;
+      toastError(errorMsg);
+    }
+  }
   return (
-    <button className="px-2">
+    <button className="px-2" onClick={handleSignOut}>
       <h2 className="flex items-center gap-2 hover:bg-(--bg-dark) p-3 duration-100 rounded-lg">
         <PiSignOutLight /> <span>Sign Out</span>
       </h2>

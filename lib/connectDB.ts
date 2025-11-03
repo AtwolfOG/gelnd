@@ -19,6 +19,7 @@ if (!cached) {
 const opt = {
   bufferCommands: false,
   serverSelectionTimeoutMS: 7000,
+  // autoIndex: true,
 };
 
 export async function connectDB(): Promise<Mongoose> {

@@ -5,7 +5,7 @@ import { Accent } from "@/components/accenttext";
 import { addNote } from "@/lib/session";
 import { useReducer } from "react";
 import { IoIosClose } from "react-icons/io";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 
 interface StateType {
   title: string;
@@ -14,7 +14,7 @@ interface StateType {
   tag: string;
 }
 interface ActionType {
-  type: "title" | "text" | "add" | "remove" | "tag";
+  type: "title" | "text" | "add" | "remove" | "tag" | "submit";
   title?: string;
   text?: string;
   tag?: string;
@@ -36,6 +36,13 @@ function reducer(prevState: StateType, action: ActionType) {
       return { ...prevState, tags: newTags };
     case "tag":
       return { ...prevState, tag: action.tag };
+    case "submit":
+      return {
+        title: "",
+        text: "",
+        tag: "",
+        tags: [],
+      };
   }
 }
 export function Note() {
@@ -64,6 +71,7 @@ export function Note() {
   async function handleSubmit() {
     const { tag, ...note } = state;
     try {
+      if (!note.title || !note.text) throw new Error("fill the fields");
       await addNote(note);
       toast.success("note added", {
         autoClose: 3000,
@@ -71,7 +79,15 @@ export function Note() {
         position: "top-center",
         transition: Bounce,
       });
-    } catch (error) {}
+      dispatch({ type: "submit" });
+    } catch (error) {
+      return toast.error(error.message || "", {
+        autoClose: 3000,
+        position: "top-right",
+        closeOnClick: true,
+        transition: Bounce,
+      });
+    }
   }
   return (
     <div className="max-w-[400px] flex grow">
@@ -93,7 +109,7 @@ export function Note() {
           <div>
             <p>Enter the content</p>
             <textarea
-              className="border border-(--border-light) font-[300] text-(--text) px-2 py-1 w-full rounded-lg focus:outline-none"
+              className="border border-(--border-light) font-[300] text-(--text) px-2 py-1 w-full rounded-lg resize-none focus:outline-none"
               placeholder="Enter the text"
               value={state.text}
               onChange={(e) => {
@@ -130,7 +146,6 @@ export function Note() {
           </button>
         </div>
       </Container>
-      <ToastContainer />
     </div>
   );
 }
@@ -142,7 +157,7 @@ function Tag({
   handleClick: (text: string) => void;
 }) {
   return (
-    <div className="w-max bg-(--border-light) text-(--border-muted) p-1 pl-2 pr-1 rounded-2xl">
+    <div className="w-max bg-(--border-light) text-(--border-muted) p-0.5 pl-2 pr-1 rounded-2xl">
       <Accent>{text}</Accent>
       <IoIosClose
         onClick={() => handleClick(text)}

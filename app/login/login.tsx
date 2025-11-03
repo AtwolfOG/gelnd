@@ -1,27 +1,28 @@
 "use client";
-import { useForm } from "react-hook-form";
+
 import { ErrorMessage } from "@hookform/error-message";
+import { useForm } from "react-hook-form";
 import { BiError } from "react-icons/bi";
+import { Eye, EyeOff } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
-import { Formtype } from "./onSubmit.";
-import { onSubmit, signinGoogle } from "./onSubmit.";
-import { FormEvent } from "react";
+import { onSubmit, signinGoogle, type LoginFormType } from "./onLogin";
+import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader } from "@/components/loading";
+
 const passwordTester: [RegExp, string][] = [
   [/.{6}/, "It must contain up to six characters"],
   [/\w/, "It must contain an alphabet"],
   [/[0-9]/, "It must contain a digit"],
 ];
-
-export default function Signup() {
+export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm<Formtype>();
+    formState: { isSubmitSuccessful, errors, isSubmitting },
+  } = useForm();
   const router = useRouter();
   return (
     <>
@@ -31,17 +32,14 @@ export default function Signup() {
         }`}
       >
         <form
-          className="flex bg-(--bg-dark) gap-7 flex-col pt-10 px-7 pb-15 rounded-2xl shadow-md w-[70vw] min-w-[320px] max-w-[400px]"
+          action=""
           onSubmit={handleSubmit(
-            async (data: Formtype, e: FormEvent<HTMLFormElement>) => {
-              await onSubmit(data, e, router);
-            }
+            async (data: LoginFormType, e: FormEvent<HTMLFormElement>) =>
+              await onSubmit(data, e, router)
           )}
+          className="flex bg-(--bg-dark) gap-7 flex-col pt-10 px-7 pb-15 rounded-2xl shadow-md w-[70vw] min-w-[320px] max-w-[400px]"
         >
-          <div>
-            <h2>Hello!</h2>
-            <p>create an account to get started with GELND</p>
-          </div>
+          <h2>Login</h2>
           <div className="flex flex-col gap-4">
             <div>
               <h4>Email</h4>
@@ -76,45 +74,13 @@ export default function Signup() {
               )}
             </div>
             <div>
-              <h4>Username</h4>
-              <input
-                {...register("username", {
-                  required: {
-                    value: true,
-                    message: "username is required",
-                  },
-                  pattern: {
-                    value: /^[\w_]{3,}/,
-                    message: "must be at least three characters",
-                  },
-                })}
-                placeholder="username"
-                className="border-1 border-(--border-light) text-(--text) px-2 py-1 w-full rounded-lg focus:outline-none"
-              />
-              {errors.username?.message && (
-                <ErrorMessage
-                  errors={errors}
-                  name="username"
-                  render={({ message }) => (
-                    <p
-                      key={message}
-                      className="flex items-center text-(--danger)! shake-horizontal"
-                    >
-                      <BiError className="inline " />
-                      {message}
-                    </p>
-                  )}
-                />
-              )}
-            </div>
-            <div>
               <h4>Password</h4>
               <input
                 type="password"
                 {...register("password", {
                   required: {
                     value: true,
-                    message: "password is required",
+                    message: "Password is required",
                   },
                   validate: (value: string) => {
                     for (const [test, msg] of passwordTester) {
@@ -124,7 +90,7 @@ export default function Signup() {
                   },
                 })}
                 placeholder="password"
-                className="border-1 border-(--border-light) text-(--text) px-2 py-1 w-full rounded-lg focus:outline-none"
+                className="border-1 border-(--border-light) text-(--text) px-2 py-1 rounded-lg w-full focus:outline-none"
               />
               {errors.password?.message && (
                 <ErrorMessage
@@ -135,40 +101,41 @@ export default function Signup() {
                       key={message}
                       className="flex items-center text-(--danger)! shake-horizontal"
                     >
-                      <BiError className="inline " />
+                      <BiError className="inline" />
                       {message}
                     </p>
                   )}
                 />
               )}
             </div>
-          </div>
-          <input
-            className="border-1 px-2 py-2 flex items-center rounded-2xl border-(--border-light) bg-(--border-light) duration-200 hover:bg-(--border-muted)"
-            type="submit"
-            value="S U B M I T"
-            disabled={isSubmitting || isSubmitSuccessful}
-          />
-          <div>
-            <h2 className="text-center">OR</h2>
-            <button
-              type="button"
-              className="border-1 px-2 py-2 border-(--border) bg-(--border-light) max-w-25 duration-400 hover:bg-(--border-muted)"
-              onClick={() => signinGoogle(router)}
-            >
-              <FcGoogle className="inline" /> <p className="inline">Google</p>
-            </button>
+            <input
+              className="border-1 px-2 py-2 flex items-center rounded-2xl border-(--border-light) bg-(--border-light) duration-200 hover:bg-(--border-muted)"
+              type="submit"
+              value="L O G I N"
+              disabled={isSubmitting || isSubmitSuccessful}
+            />
+            <div>
+              <h2 className="text-center">OR</h2>
+              <button
+                type="button"
+                onClick={() => signinGoogle(router)}
+                className="border-1 px-2 py-2 border-(--border) bg-(--border-light) max-w-25 duration-400 hover:bg-(--border-muted)"
+              >
+                <FcGoogle className="inline" /> <p className="inline">Google</p>
+              </button>
+            </div>
           </div>
           <Link
-            href={"/login"}
+            href={"/signup"}
             className="text-center text-(--text-light) underline decoration-(--text-light) underline-offset-1"
           >
-            Already have an account
+            Don&apos;t have an account
           </Link>
+
+          <ToastContainer />
         </form>
       </div>
       {isSubmitting && <Loader height={35} width={4} />}
-      <ToastContainer />
     </>
   );
 }

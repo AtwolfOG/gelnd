@@ -12,8 +12,8 @@ export default function Sidebar() {
       <div className="flex flex-col grow justify-center max-h-full border-y-1 border-y-white/30">
         <Links />
       </div>
-      <div className="flex flex-col max-h-20/100">
-        <Settings />
+      <div className="flex flex-col max-h-10/100">
+        {/* <Settings /> */}
         <Signout />
       </div>
     </div>

@@ -5,7 +5,7 @@ import { ChangeEventHandler, useEffect, useReducer, useRef } from "react";
 import { PiBookOpenThin } from "react-icons/pi";
 import Cookies from "js-cookie";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { createSession, deleteSession, saveSession } from "@/lib/session";
 import TextInput from "@/components/customInput";
 
@@ -215,7 +215,6 @@ export default function CreateSession() {
           )}
         </div>
       </Container>
-      <ToastContainer />
     </div>
   );
 }

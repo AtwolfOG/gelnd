@@ -10,6 +10,7 @@ import {
 import { toast, Bounce } from "react-toastify";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { toastError } from "@/components/toast";
 
 export type Formtype = {
   email: string;
@@ -31,9 +32,9 @@ export async function onSubmit(
     const user = userCredentials.user;
     const url = `${
       process.env.NODE_ENV === "development" ? "http" : "https"
-    }://${window.location.host}/login`;
+    }://${window.location.host}/user/login`;
     await sendEmailVerification(user, { url });
-    toast.info("Go to your inbox to verify your email", {
+    toast.info("Go to your inbox to verify your email, pls check spam", {
       position: "top-right",
       autoClose: 5000,
       closeButton: true,
@@ -42,38 +43,43 @@ export async function onSubmit(
     });
     const interval = setInterval(async () => {
       if (user && user.emailVerified) {
-        const IdToken = await user.getIdToken();
+        const idToken = await user.getIdToken();
         clearInterval(interval);
-        console.log(IdToken);
-        const res = await fetch("api/sessionLogin", {
+        console.log(idToken);
+        const res = await fetch("/api/sessionSignup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ IdToken, username: data.username }),
+          body: JSON.stringify({
+            idToken,
+            username: data.username,
+            provider: "password",
+          }),
         });
-        toast.success("email verified", {
-          position: "top-center",
-          autoClose: false,
-          closeButton: true,
-          theme: "light",
-          transition: Bounce,
-        });
-        router.push("/home");
+        const resdata = await res.json();
+        if (res.ok) {
+          toast.success("email verified", {
+            position: "top-center",
+            autoClose: false,
+            closeButton: true,
+            theme: "light",
+            transition: Bounce,
+          });
+          router.push("/user/dashboard");
+        } else {
+          toastError(resdata.message);
+        }
       } else {
         user.reload();
       }
     }, 5000);
   } catch (err) {
     let errMsg = "An error occured";
+    if (err.code) return toastError(err.code);
     if (err instanceof Error) errMsg = err.message;
-    toast.error(errMsg, {
-      position: "top-center",
-      autoClose: false,
-      closeButton: true,
-      theme: "light",
-      transition: Bounce,
-    });
+    toastError(errMsg);
+    throw err;
   }
 }
 
@@ -84,20 +90,23 @@ export async function signinGoogle(router: AppRouterInstance) {
     // setPersistence(auth, browserLocalPersistence);
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const IdToken = await user.getIdToken();
-        const res = await fetch("api/sessionLogin", {
+        const idToken = await user.getIdToken();
+        const res = await fetch("api/sessionSignup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ IdToken, username: user.displayName }),
+          // this should work for both existing and new user
+          body: JSON.stringify({
+            idToken,
+            username: user.displayName,
+            provider: "google",
+          }),
         });
-        router.push("/home");
+        router.push("/user/dashboard");
       }
     });
     const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    const credentials = GoogleAuthProvider.credentialFromResult(result);
   } catch (error) {
     console.log(error);
   }

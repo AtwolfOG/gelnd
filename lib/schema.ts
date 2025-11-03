@@ -11,13 +11,16 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    totaltime: {
+    time: {
       type: Number,
       default: 0,
     },
     streak: {
       type: Number,
-      Default: 0,
+      default: 0,
+    },
+    lastActive: {
+      type: Date,
     },
   },
   {
@@ -74,8 +77,8 @@ const noteSchema = new Schema(
   },
   { timestamps: true }
 );
-
 const User = models.User || model("User", userSchema);
 const Activity = models.Activity || model("Activity", activitySchema);
 const Note = models.Note || model("Note", noteSchema);
+
 export { User, Activity, Note };
