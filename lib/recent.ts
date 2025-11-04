@@ -2,7 +2,6 @@
 
 import { getUserId } from "./analytics";
 import { Activity } from "./schema";
-import { verifySession } from "./verify";
 
 export async function getRecent() {
   try {

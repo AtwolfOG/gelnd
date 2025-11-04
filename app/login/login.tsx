@@ -1,13 +1,14 @@
 "use client";
 
+// eslint-disable
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm } from "react-hook-form";
 import { BiError } from "react-icons/bi";
-import { Eye, EyeOff } from "lucide-react";
+// import { Eye, EyeOff } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { onSubmit, signinGoogle, type LoginFormType } from "./onLogin";
-import type { FormEvent } from "react";
+import type { BaseSyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader } from "@/components/loading";
@@ -22,7 +23,7 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { isSubmitSuccessful, errors, isSubmitting },
-  } = useForm();
+  } = useForm<LoginFormType>();
   const router = useRouter();
   return (
     <>
@@ -34,8 +35,9 @@ export default function Login() {
         <form
           action=""
           onSubmit={handleSubmit(
-            async (data: LoginFormType, e: FormEvent<HTMLFormElement>) =>
-              await onSubmit(data, e, router)
+            async (data: LoginFormType, e?: BaseSyntheticEvent) => {
+              await onSubmit(data, router, e);
+            }
           )}
           className="flex bg-(--bg-dark) gap-7 flex-col pt-10 px-7 pb-15 rounded-2xl shadow-md w-[70vw] min-w-[320px] max-w-[400px]"
         >

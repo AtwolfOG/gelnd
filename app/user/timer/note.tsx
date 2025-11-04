@@ -19,12 +19,12 @@ interface ActionType {
   text?: string;
   tag?: string;
 }
-function reducer(prevState: StateType, action: ActionType) {
+function reducer(prevState: StateType, action: ActionType): StateType {
   switch (action.type) {
     case "title":
-      return { ...prevState, title: action.title };
+      return { ...prevState, title: action.title ?? "" };
     case "text":
-      return { ...prevState, text: action.text };
+      return { ...prevState, text: action.text ?? "" };
     case "add":
       return {
         ...prevState,
@@ -35,7 +35,7 @@ function reducer(prevState: StateType, action: ActionType) {
       const newTags = prevState.tags.filter((val) => val !== action.tag);
       return { ...prevState, tags: newTags };
     case "tag":
-      return { ...prevState, tag: action.tag };
+      return { ...prevState, tag: action.tag ?? "" };
     case "submit":
       return {
         title: "",
@@ -69,6 +69,7 @@ export function Note() {
     dispatch({ type: "remove", tag: text });
   }
   async function handleSubmit() {
+    // eslint-disable-next-line
     const { tag, ...note } = state;
     try {
       if (!note.title || !note.text) throw new Error("fill the fields");
@@ -81,12 +82,15 @@ export function Note() {
       });
       dispatch({ type: "submit" });
     } catch (error) {
-      return toast.error(error.message || "", {
-        autoClose: 3000,
-        position: "top-right",
-        closeOnClick: true,
-        transition: Bounce,
-      });
+      return toast.error(
+        (error instanceof Error && error.message) || "An error Occured",
+        {
+          autoClose: 3000,
+          position: "top-right",
+          closeOnClick: true,
+          transition: Bounce,
+        }
+      );
     }
   }
   return (

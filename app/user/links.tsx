@@ -54,7 +54,7 @@ export function Signout() {
       const res = await fetch("/api/sessionLogout", {
         method: "POST",
       });
-      const data = res.json();
+      const data = await res.json();
       if (res.ok) {
         toastSuccess("User Successfully logged out");
         router.push("/");

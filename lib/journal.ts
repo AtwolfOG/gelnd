@@ -13,7 +13,7 @@ export async function getNotes(query: string) {
         { text: { $regex: query, $options: "i" } },
         { tags: { $regex: query, $options: "i" } },
       ],
-    }).populate("activity");
+    });
     return notes;
   } catch (error) {
     throw error;

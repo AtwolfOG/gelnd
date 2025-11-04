@@ -1,11 +1,16 @@
 import Container from "@/components/container";
-import { getRecent } from "@/lib/recent";
 import Link from "next/link";
 import { PiBookOpenThin } from "react-icons/pi";
 import Search from "./search";
 import { getSession } from "@/lib/getSession";
 import { Suspense } from "react";
 import { Loader } from "@/components/loading";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Session",
+  description: "List of all sessions",
+};
 
 function getTime(time: number) {
   const minutes = Math.floor((time % 3600000) / 60000);

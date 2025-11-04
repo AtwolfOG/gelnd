@@ -2,6 +2,12 @@ import { getUser } from "@/lib/analytics";
 import Recent from "./recent";
 import Session from "./session";
 import Stats from "./stats";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "View the progress of your growth spiritual with ease",
+};
 
 export default async function Page() {
   const { time, lastActive, streak, username } = await getUser();

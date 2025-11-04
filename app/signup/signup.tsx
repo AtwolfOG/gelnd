@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { Formtype } from "./onSubmit.";
 import { onSubmit, signinGoogle } from "./onSubmit.";
-import { FormEvent } from "react";
+import { type BaseSyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader } from "@/components/loading";
@@ -33,8 +33,8 @@ export default function Signup() {
         <form
           className="flex bg-(--bg-dark) gap-7 flex-col pt-10 px-7 pb-15 rounded-2xl shadow-md w-[70vw] min-w-[320px] max-w-[400px]"
           onSubmit={handleSubmit(
-            async (data: Formtype, e: FormEvent<HTMLFormElement>) => {
-              await onSubmit(data, e, router);
+            async (data: Formtype, e?: BaseSyntheticEvent) => {
+              await onSubmit(data, router, e);
             }
           )}
         >

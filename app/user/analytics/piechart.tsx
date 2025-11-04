@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { LabelList, Pie, PieChart, Cell } from "recharts";
 import {
   Card,
@@ -20,7 +19,7 @@ import {
 export const description = "A pie chart with a label list";
 
 const chartConfig = {
-  time: { label: "Time" },
+  time: { label: "Time", color: "#ccc" },
   bible: { label: "Bible", color: "#9d2400" }, // reddish-brown
   prayer: { label: "Prayer", color: "#0074d3" }, // blue
 } satisfies ChartConfig;

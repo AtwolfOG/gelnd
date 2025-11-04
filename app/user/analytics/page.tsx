@@ -1,11 +1,13 @@
-import { getAllSession, getWeekTime } from "@/lib/analytics";
-import WeekChart from "./weekchart";
 import { allSession, monthlyChartData, weeklyChartData } from "./getanalytics";
 import { getProgress, getTime } from "./utils";
 import Container from "@/components/container";
-import MonthChart from "./monthChart";
-import { SessionChart } from "./piechart";
 import Charts from "./chartCon";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Analytics",
+  description: "Analyze your progress consciously",
+};
 
 export default async function Page() {
   // all these fetched data can be undefined or an array without any elements

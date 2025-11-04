@@ -1,13 +1,14 @@
 "use client";
 import Container from "@/components/container";
 import { useSearchParams } from "next/navigation";
-import { ChangeEventHandler, useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, type ChangeEvent } from "react";
 import { PiBookOpenThin } from "react-icons/pi";
 import Cookies from "js-cookie";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { Bounce, toast } from "react-toastify";
 import { createSession, deleteSession, saveSession } from "@/lib/session";
 import TextInput from "@/components/customInput";
+import { toastError, toastSuccess } from "@/components/toast";
 
 interface stateType {
   type: string;
@@ -30,19 +31,19 @@ function reducer(
     time?: number;
     started?: boolean;
   }
-) {
+): stateType {
   switch (action.types) {
     case "type":
-      return { ...state, type: action.type };
+      return { ...state, type: action.type ?? "" };
     case "entry":
-      return { ...state, entry: action.entry };
+      return { ...state, entry: action.entry ?? "" };
     case "time":
       return { ...state, time: state.time + 1000 };
     case "session":
       return {
-        type: action.type,
-        entry: action.entry,
-        time: action.time,
+        type: action.type ?? "",
+        entry: action.entry ?? "",
+        time: action.time ?? 0,
         started: true,
       };
     case "start":
@@ -53,12 +54,13 @@ function reducer(
         time: 0,
         started: false,
       };
+    default:
+      return state;
   }
 }
 let timerId: NodeJS.Timeout;
 export default function CreateSession() {
   const searchParams = useSearchParams();
-  const timerRef = useRef(new Date().getTime());
   const [state, dispatch] = useReducer(reducer, {
     type: "",
     entry: "",
@@ -80,24 +82,18 @@ export default function CreateSession() {
         dispatch({ types: "time" });
       }, 1000);
     }
-  }, []);
+  }, [searchParams]);
   function handleClick(type: string) {
     if (state.started) return;
     dispatch({ types: "type", type });
   }
-  function handleChange(e) {
-    console.log(e.target.value);
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     dispatch({ types: "entry", entry: e.target.value });
   }
   async function handleStart() {
     try {
       if (!state.type || !state.entry) {
-        return toast.error("Please select and fill the fields", {
-          autoClose: 3000,
-          closeButton: true,
-          transition: Bounce,
-          position: "top-center",
-        });
+        return toastError("Please select and fill the fields");
       }
       const id = await createSession({ type: state.type, entry: state.entry });
       dispatch({ types: "start", started: true });
@@ -117,10 +113,13 @@ export default function CreateSession() {
         dispatch({ types: "time" });
       }, 1000);
     } catch (err) {
-      toast.error(err.message || "An error occoured", {
-        autoClose: 3000,
-        transition: Bounce,
-      });
+      toast.error(
+        (err instanceof Error && err.message) || "An error occoured",
+        {
+          autoClose: 3000,
+          transition: Bounce,
+        }
+      );
     }
   }
   async function handleDelete() {
@@ -134,21 +133,19 @@ export default function CreateSession() {
         transition: Bounce,
       });
     } catch (err) {
-      toast.error(err.message || "An error occourd", {
+      toast.error((err instanceof Error && err.message) || "An error occourd", {
         autoClose: 3000,
         transition: Bounce,
       });
     }
   }
   async function handleSave() {
+    if (!(state.time >= 60000))
+      return toastError("Your session has to be at least a minute");
     clearInterval(timerId);
     dispatch({ types: "start", started: false });
     await saveSession(state.time);
-    toast.success("session saved", {
-      autoClose: 3000,
-      closeOnClick: true,
-      transition: Bounce,
-    });
+    toastSuccess("session saved");
   }
   return (
     <div className="max-w-[400px] grow">

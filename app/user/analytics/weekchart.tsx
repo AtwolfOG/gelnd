@@ -37,39 +37,42 @@ export default function WeekChart({
           content={
             <ChartTooltipContent
               className="bg-(--bg-dark) text-(--text-light)"
-              formatter={(value, name, item, index) => (
-                <>
-                  <div
-                    className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg) text-foreground "
-                    style={
-                      {
-                        "--color-bg": `var(--chart-${name})`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  <span className="inline text-foreground">
-                    {config[name]?.label || name}
-                  </span>
-                  <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                    {value}
-                    <span className="text-muted-foreground font-normal">
-                      min
+              formatter={(value, name, item, index) => {
+                const key = name as keyof typeof config;
+                return (
+                  <>
+                    <div
+                      className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-(--color-bg) text-foreground "
+                      style={
+                        {
+                          "--color-bg": `var(--chart-${name})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                    <span className="inline text-foreground">
+                      {config[key]?.label || name}
                     </span>
-                  </div>
-                  {/* Add this after the last item */}
-                  {index === 1 && (
-                    <div className="text-foreground mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium">
-                      Total
-                      <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                        {item.payload.bible + item.payload.prayer}
-                        <span className="text-muted-foreground font-normal">
-                          min
-                        </span>
-                      </div>
+                    <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
+                      {value}
+                      <span className="text-muted-foreground font-normal">
+                        min
+                      </span>
                     </div>
-                  )}
-                </>
-              )}
+                    {/* Add this after the last item */}
+                    {index === 1 && (
+                      <div className="text-foreground mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium">
+                        Total
+                        <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
+                          {item.payload.bible + item.payload.prayer}
+                          <span className="text-muted-foreground font-normal">
+                            min
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              }}
             />
           }
         />

@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { ReactNode } from "react";
+import React from "react";
 
 export default function Navbar() {
   return (

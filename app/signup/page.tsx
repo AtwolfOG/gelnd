@@ -1,6 +1,11 @@
 import { getUserId } from "@/lib/analytics";
 import Signup from "./signup";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Signup",
+};
 
 export default async function page() {
   try {
@@ -9,7 +14,7 @@ export default async function page() {
       redirect("/user/dashboard");
     }
   } catch (error) {
-    if (error.message == "NEXT_REDIRECT") {
+    if (error instanceof Error && error.message == "NEXT_REDIRECT") {
       throw error;
     }
   }

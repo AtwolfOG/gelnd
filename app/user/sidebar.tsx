@@ -1,6 +1,5 @@
 import { PiBookOpenThin } from "react-icons/pi";
-import { JSX } from "react";
-import { Links, NLink, Settings, Signout } from "./links";
+import { Links, Signout } from "./links";
 
 export default function Sidebar() {
   return (

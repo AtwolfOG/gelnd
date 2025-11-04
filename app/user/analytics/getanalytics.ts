@@ -6,7 +6,6 @@ import {
   getWeekTime,
 } from "@/lib/analytics";
 import type { weeklyDataType } from "./weekchart";
-import type { monthlyDataType } from "./monthChart";
 
 const now = new Date();
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -20,7 +19,7 @@ export async function weeklyChartData() {
     const lastWeek = new Date(currentWeek);
     lastWeek.setDate(currentWeek.getDate() - 7);
     const weekData = await getWeekTime(currentWeek, timezone);
-    const lastWeekTime = await getLastWeekTime(lastWeek, currentWeek, timezone);
+    const lastWeekTime = await getLastWeekTime(lastWeek, currentWeek);
     const { weeklyData, totalWeekTime } = formatWeekly(weekData);
     return { weeklyData, currentWeekTime: totalWeekTime, lastWeekTime };
   } catch (error) {
@@ -57,8 +56,7 @@ export async function monthlyChartData() {
     const monthData = await getMonthlydata(currentMonth, timezone);
     const lastMonthTime: number = await getLastMonthdata(
       currentMonth,
-      lastMonth,
-      timezone
+      lastMonth
     );
     const { monthlyData, totalMonthTime } = formatMonthly(monthData);
     return { monthlyData, currentMonthTime: totalMonthTime, lastMonthTime };

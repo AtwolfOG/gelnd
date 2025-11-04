@@ -2,6 +2,14 @@ import { getNotes } from "@/lib/journal";
 import { Accent } from "@/components/accenttext";
 import Container from "@/components/container";
 import Search from "./search";
+import type { Metadata } from "next";
+import Link from "next/link";
+import type { Types } from "mongoose";
+
+export const metadata: Metadata = {
+  title: "Journey",
+  description: "Document your journey through out your progress",
+};
 
 export default async function NoteComponent({
   searchParams,
@@ -26,6 +34,7 @@ async function Notes({
     text: string;
     tags: string[];
     createdAt: string;
+    activity?: Types.ObjectId;
   }[];
 }) {
   return (
@@ -34,13 +43,14 @@ async function Notes({
         <Container className="my-12 m-auto max-w-[800px] w-[90%] md:w-[80%]">
           <div className="flex flex-col gap-4 mt-8 ">
             <h2>Notes</h2>
-            {notes.map(({ title, text, tags, createdAt }, i) => (
+            {notes.map(({ title, text, tags, createdAt, activity }, i) => (
               <Note
                 key={i}
                 title={title}
                 text={text}
                 tags={tags}
                 createdAt={createdAt}
+                activity={activity}
               />
             ))}
           </div>
@@ -56,14 +66,17 @@ function Note({
   text,
   tags,
   createdAt,
+  activity,
 }: {
   title: string;
   text: string;
   tags: string[];
   createdAt: string;
+  activity?: Types.ObjectId;
 }) {
+  const activityString = activity?.toString();
   return (
-    <Container>
+    <Container className="flex flex-wrap justify-between">
       <div>
         <div className="mt-2 mb-5">
           <h2 className="">{title}</h2>
@@ -75,6 +88,14 @@ function Note({
         </div>
         <p className="text-sm!">{new Date(createdAt).toLocaleString()}</p>
       </div>
+      {activity && (
+        <Link
+          className="text-(--text-light) underline decoration-(--text-light) underline-offset-1 my-2"
+          href={`/user/session/${activityString}`}
+        >
+          Go to Session
+        </Link>
+      )}
     </Container>
   );
 }

@@ -1,7 +1,6 @@
-import admin from "firebase-admin";
-
-const config = {};
-
+import admin, { ServiceAccount } from "firebase-admin";
+// import config from "@/firebaseconfig.json"
+// eslint-disable-next-line
 const app = admin.apps.length
   ? admin.app()
   : admin.initializeApp({
@@ -17,7 +16,7 @@ const app = admin.apps.length
         auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
         client_x509_cert_url: process.env.client_x509_cert_url,
         universe_domain: process.env.universe_domain,
-      }),
+      } as ServiceAccount),
     });
 
 export const adminAuth = admin.auth();

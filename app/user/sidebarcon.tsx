@@ -1,11 +1,10 @@
 "use client";
 import { RxHamburgerMenu as Open } from "react-icons/rx";
 import { IoCloseOutline as Close } from "react-icons/io5";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 export default function SidebarCon({ children }: { children: ReactNode }) {
   const [toggle, setToggle] = useState(false);
-  // const {} = use
   return (
     <>
       <button
@@ -25,17 +24,3 @@ export default function SidebarCon({ children }: { children: ReactNode }) {
     </>
   );
 }
-
-// function getWindowDimension() {
-//   const { innerWidth: width } = window;
-//   return { width };
-// }
-
-// function useWindowDimensions() {
-//   const [windowWidth, setWindowWidth] = useState(getWindowDimension);
-//   useEffect(() => {
-//     function handleResize() {
-//       setWindowWidth();
-//     }
-//   }, []);
-// }

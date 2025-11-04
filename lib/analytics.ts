@@ -100,11 +100,7 @@ export async function getWeekTime(date: Date, format: string) {
     throw error;
   }
 }
-export async function getLastWeekTime(
-  date: Date,
-  stopDate: Date,
-  format: string
-) {
+export async function getLastWeekTime(date: Date, stopDate: Date) {
   try {
     const _id = await getUserId();
     const week = await Activity.aggregate([
@@ -191,11 +187,7 @@ export async function getMonthlydata(date: Date, timezone: string) {
     throw error;
   }
 }
-export async function getLastMonthdata(
-  date: Date,
-  lastMonth: Date,
-  timezone: string
-) {
+export async function getLastMonthdata(date: Date, lastMonth: Date) {
   try {
     const _id = await getUserId();
     const monthly = await Activity.aggregate([

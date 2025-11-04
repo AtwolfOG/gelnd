@@ -2,7 +2,7 @@ import { adminAuth } from "@/lib/firebaseadmin";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST() {
   try {
     // revoking session cookie in firebase global and deleting cookie
     const cookie = await cookies();

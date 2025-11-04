@@ -5,8 +5,6 @@ import { Activity, Note, User } from "./schema";
 import { verifySession } from "./verify";
 import { revalidatePath } from "next/cache";
 import connectDB from "./connectDB";
-import { Types } from "mongoose";
-import mongoose from "mongoose";
 import { Worker } from "worker_threads";
 import path from "path";
 

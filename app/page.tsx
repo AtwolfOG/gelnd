@@ -1,13 +1,17 @@
 import Image from "next/image";
 import { Cards } from "../components/card";
 import JoinBtn from "@/components/joinBtn";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import Guide from "@/components/guide";
 import Benefits from "@/components/benefits";
 import CTA from "@/components/cta";
 import { PiBookOpenThin } from "react-icons/pi";
 import Navbar from "@/components/navbar";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Homepage for GELND",
+};
 
 export default function Home() {
   return (
@@ -45,7 +49,7 @@ export default function Home() {
       <Benefits />
       <CTA />
       <section className="">
-        <div className=" m-auto bg-(--bg-dark) w-[80vw] px-10 pt-20 pb-10 rounded-2xl">
+        <div className=" m-auto bg-(--bg-dark) w-[80vw] px-5 md:px-10 pt-20 pb-10 rounded-2xl">
           <h1 className="flex items-center gap-2">
             <PiBookOpenThin className="inline text-(--border-muted)" />{" "}
             <span className="logo">GELND</span>

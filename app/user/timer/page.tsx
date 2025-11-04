@@ -1,9 +1,14 @@
-import { BsJustifyLeft } from "react-icons/bs";
 import TimeSpent from "./timeSpent";
 import CreateSession from "./createSession";
 import { Note } from "./note";
 import Notes from "./notes";
 import { cookies } from "next/headers";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Timer",
+  description: "Measure the time you use",
+};
 
 export default async function Page() {
   const session = (await cookies()).get("session")?.value;

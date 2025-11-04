@@ -16,7 +16,11 @@ export async function getSession(type: string, entry: string) {
       }).sort({ createdAt: -1 });
       return activities;
     } else if (type || entry) {
-      const query = { ...baseQuery };
+      const query: {
+        user: string;
+        type?: string;
+        entry?: { $regex: string; $options: string };
+      } = { ...baseQuery };
       if (type) query.type = type;
       if (entry) query.entry = { $regex: entry, $options: "i" };
       const activities = await Activity.find(query).sort({ createdAt: -1 });

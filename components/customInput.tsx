@@ -5,6 +5,7 @@ export default function TextInput({
   className,
 }: {
   value: string;
+  // eslint-disable-next-line
   onChange: (e: any) => void;
   placeholder: string;
   className?: string;

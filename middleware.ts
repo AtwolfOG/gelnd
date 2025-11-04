@@ -1,7 +1,7 @@
 // middleware.ts
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-export function middleware(req) {
+export function middleware(req: NextRequest) {
   const token = req.cookies.get("authSession")?.value;
 
   if (!token) {
@@ -15,7 +15,7 @@ export function middleware(req) {
 
 export const config = {
   matcher: [
-    "/((?!signup|api|_next/static|_next/image|favicon.ico|$))",
+    "/((?!signup|login|api|_next/static|_next/image|favicon.ico|$))",
     "/user/:path*",
   ],
 };

@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { type BaseSyntheticEvent } from "react";
 import { auth } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
@@ -8,7 +8,6 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { toast, Bounce } from "react-toastify";
-import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastError } from "@/components/toast";
 
@@ -19,10 +18,10 @@ export type Formtype = {
 };
 export async function onSubmit(
   data: Formtype,
-  e: FormEvent<HTMLFormElement>,
-  router: AppRouterInstance
+  router: AppRouterInstance,
+  e?: BaseSyntheticEvent
 ) {
-  e.preventDefault();
+  e?.preventDefault();
   try {
     const userCredentials = await createUserWithEmailAndPassword(
       auth,
@@ -74,12 +73,15 @@ export async function onSubmit(
         user.reload();
       }
     }, 5000);
-  } catch (err) {
+  } catch (error) {
     let errMsg = "An error occured";
-    if (err.code) return toastError(err.code);
-    if (err instanceof Error) errMsg = err.message;
+    if (error && typeof error === "object" && "code" in error) {
+      const code = (error as { code?: string }).code;
+      if (typeof code === "string") return toastError(code);
+    }
+    if (error instanceof Error) errMsg = error.message;
     toastError(errMsg);
-    throw err;
+    throw error;
   }
 }
 
@@ -88,7 +90,7 @@ const provider = new GoogleAuthProvider();
 export async function signinGoogle(router: AppRouterInstance) {
   try {
     // setPersistence(auth, browserLocalPersistence);
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         const idToken = await user.getIdToken();
         const res = await fetch("api/sessionSignup", {
@@ -103,11 +105,16 @@ export async function signinGoogle(router: AppRouterInstance) {
             provider: "google",
           }),
         });
-        router.push("/user/dashboard");
+        if (res.ok) {
+          router.push("/user/dashboard");
+        }
       }
     });
-    const result = await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch (error) {
-    console.log(error);
+    if (error && typeof error === "object" && "code" in error) {
+      const code = (error as { code?: string }).code;
+      if (typeof code === "string") return toastError(code);
+    }
   }
 }

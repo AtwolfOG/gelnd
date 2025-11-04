@@ -6,7 +6,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import type { FormEvent } from "react";
+import type { BaseSyntheticEvent } from "react";
 import { toastError, toastSuccess } from "@/components/toast";
 
 export interface LoginFormType {
@@ -15,11 +15,11 @@ export interface LoginFormType {
 }
 export async function onSubmit(
   data: LoginFormType,
-  e: FormEvent<HTMLFormElement>,
-  router: AppRouterInstance
+  router: AppRouterInstance,
+  e?: BaseSyntheticEvent
 ) {
   try {
-    e.preventDefault();
+    e?.preventDefault();
     const { email, password } = data;
     const userCreadentials = await signInWithEmailAndPassword(
       auth,
@@ -43,7 +43,10 @@ export async function onSubmit(
     }
   } catch (error) {
     let errorMsg = "An unexpected error occured pls try again";
-    if (error.code) return toastError(error.code);
+    if (error && typeof error === "object" && "code" in error) {
+      const code = (error as { code?: string }).code;
+      if (typeof code === "string") return toastError(code);
+    }
     if (error instanceof Error) errorMsg = error.message;
     toastError(errorMsg);
   }
@@ -72,10 +75,11 @@ export async function signinGoogle(router: AppRouterInstance) {
         }
       }
     });
-    const result = await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch (error) {
-    if (error?.code) {
-      toastError(error.code);
+    if (error && typeof error === "object" && "code" in error) {
+      const code = (error as { code?: string }).code;
+      if (typeof code === "string") return toastError(code);
     }
   }
 }
