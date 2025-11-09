@@ -11,7 +11,7 @@ export default function JoinBtn({ children }: { children: React.ReactNode }) {
   return (
     <button
       onClick={handleClick}
-      className=" border-[#daa06d41] bg-[#8b2e0079] border-1 px-4 py-3 rounded-2xl text-[#ffffffd0]"
+      className=" border-[#daa06d41] bg-[#8b2e0079] hover:bg-[#63210079] border-1 px-4 py-3 rounded-2xl text-[#ffffffd0]"
     >
       {children}
     </button>

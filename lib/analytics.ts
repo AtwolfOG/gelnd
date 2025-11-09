@@ -17,13 +17,18 @@ export async function getUserId() {
   }
 }
 
-export async function getUser() {
+export async function getUser(yesterday: Date) {
   try {
     await connectDB();
     const { email } = await verifySession();
     if (!email) throw new Error("User not logged in");
     const user = await User.findOne({ email });
     if (!user) throw new Error("invalid user");
+    const lastSession = await Activity.findOne({
+      user: user._id,
+      createdAt: { $gte: yesterday },
+    });
+    if (!lastSession) return { ...user, streak: 0 };
     return user;
   } catch (err) {
     throw err;

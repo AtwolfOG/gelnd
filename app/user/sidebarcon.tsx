@@ -15,7 +15,7 @@ export default function SidebarCon({ children }: { children: ReactNode }) {
       </button>
 
       <div
-        className={`w-max sidebar -left-full md:block md:left-0 duration-500 ${
+        className={`w-max sidebar -left-full z-50 md:block md:left-0 duration-500 ${
           toggle ? "left-0" : ""
         }`}
       >

@@ -24,7 +24,6 @@ const firebaseConfig = {
 // }
 const app = getApps.length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-console.log(auth);
 // window.auth = auth;
 // connectAuthEmulator(auth, "http://127.0.0.1:9099");
 export { auth };

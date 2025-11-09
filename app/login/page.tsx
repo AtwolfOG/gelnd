@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   try {
     const userId = await getUserId();
+    console.log(userId);
     if (userId) {
       redirect("/user/dashboard");
     }

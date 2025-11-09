@@ -15,8 +15,6 @@ export default async function Page() {
   const { monthlyData, currentMonthTime, lastMonthTime } =
     await monthlyChartData();
   const { session, count, sessionData } = await allSession();
-  console.log("last week time", lastWeekTime);
-  console.log("current week time", currentWeekTime);
   return (
     <div>
       <h1>Analytics & Insights</h1>

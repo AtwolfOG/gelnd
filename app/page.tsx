@@ -7,6 +7,7 @@ import CTA from "@/components/cta";
 import { PiBookOpenThin } from "react-icons/pi";
 import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -20,8 +21,10 @@ export default function Home() {
 
       <div className="w-full min-h-[300px] h-[80vh]  bg-cover bg-center flex flex-col justify-center px-5 sm:px-10 items-start hero">
         <div className="mb-3">
-          <h1 className="text-(--accent-color)">Deepen Your Faith,</h1>
-          <h1 className="text-(--accent-color)">Track Your Spiritual Growth</h1>
+          <h1 className="text-(--accent-color)!">Deepen Your Faith,</h1>
+          <h1 className="text-(--accent-color)!">
+            Track Your Spiritual Growth
+          </h1>
         </div>
         <p className="max-w-[40ch] mb-6 text-(--text-accent)!">
           Transform your spiritual practice with intentional time tracking,
@@ -48,19 +51,7 @@ export default function Home() {
       <Guide />
       <Benefits />
       <CTA />
-      <section className="">
-        <div className=" m-auto bg-(--bg-dark) w-[80vw] px-5 md:px-10 pt-20 pb-10 rounded-2xl">
-          <h1 className="flex items-center gap-2">
-            <PiBookOpenThin className="inline text-(--border-muted)" />{" "}
-            <span className="logo">GELND</span>
-          </h1>
-          <p className="max-w-[20ch] mb-10">
-            Empowering believers to grow deeper in their faith through
-            intentional spiritual tracking.
-          </p>
-          <JoinBtn>Create free account</JoinBtn>
-        </div>
-      </section>
+      <Footer />
     </>
   );
 }

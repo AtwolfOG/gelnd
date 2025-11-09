@@ -13,14 +13,23 @@ export const metadata: Metadata = {
     template: "%s | GELND",
     default: "GELND",
   },
+  metadataBase: new URL(import.meta.url),
   description:
     "This is an analytics app to help christians in their spiritual journey",
   openGraph: {
     title: "GELND",
     description:
       "This is an analytics app for christians to measure their spiritual growth",
-    url: import.meta.url,
     siteName: "GENLD",
+    images: ["opengraph.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GELND",
+    description:
+      "This is an analytics app for christians to measure their spiritual growth",
+    site: "gelnd.vercel.app",
+    images: ["opengraph.png"],
   },
 };
 
