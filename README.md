@@ -4,7 +4,8 @@ This is an analytics project built with Next.js
 
 This app can help christians to measure, document and study their spiritual growth by setting session for their activities
 
-![dashboard](./public/images/opengraph.png)
+[![dashboard](./app/opengraph.png)](https://gelnd.vercel.app)
+[test online](https://gelnd.vercel.app)
 
 ## How to Use
 
