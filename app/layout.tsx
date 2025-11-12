@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description:
       "This is an analytics app for christians to measure their spiritual growth",
     siteName: "GENLD",
-    images: ["/opengraph.png"],
+    images: "/opengraph.png",
   },
   twitter: {
     card: "summary_large_image",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description:
       "This is an analytics app for christians to measure their spiritual growth",
     site: "gelnd.vercel.app",
-    images: ["/opengraph.png"],
+    images: "/opengraph.png",
   },
 };
 

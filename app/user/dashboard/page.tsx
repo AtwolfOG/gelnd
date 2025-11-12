@@ -14,10 +14,9 @@ export default async function Page() {
   yesterday.setHours(0, 0, 0, 0);
   yesterday.setDate(yesterday.getDate() - 1);
   const { time, lastActive, streak, username } = await getUser(yesterday);
-  console.log(username);
   const name: string = username.split(" ")[0];
   return (
-    <div className="">
+    <div>
       <h1>Welcome Back {name.charAt(0).toUpperCase() + name.slice(1)}</h1>
       <p>continue your spiritual journey</p>
       <Stats time={time} lastActive={lastActive} streak={streak} />

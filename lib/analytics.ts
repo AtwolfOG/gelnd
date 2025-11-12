@@ -28,7 +28,7 @@ export async function getUser(yesterday: Date) {
       user: user._id,
       createdAt: { $gte: yesterday },
     });
-    if (!lastSession) return { ...user, streak: 0 };
+    if (!lastSession) return { ...user._doc, streak: 0 };
     return user;
   } catch (err) {
     throw err;

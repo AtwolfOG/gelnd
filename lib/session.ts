@@ -5,8 +5,7 @@ import { Activity, Note, User } from "./schema";
 import { verifySession } from "./verify";
 import { revalidatePath } from "next/cache";
 import connectDB from "./connectDB";
-import { Worker } from "worker_threads";
-import path from "path";
+import { updateUser } from "./updateUser";
 
 export async function createSession({
   type,
@@ -69,32 +68,7 @@ export async function saveSession(time: number) {
     const activity = await Activity.findByIdAndUpdate(id, { time });
     cookie.delete("session");
     const { userId } = await getUserId();
-
-    // Spawn a worker to update user's total time and streak asynchronously.
-    try {
-      const workerPath = path.join(process.cwd(), "lib", "worker", "worker.js");
-      const worker = new Worker(workerPath, {
-        workerData: {
-          time,
-          userId,
-          createdAt: activity?.createdAt,
-        },
-        // type: "module",
-      });
-
-      worker.on("message", (msg) => {
-        const m = msg as { error?: string } | undefined;
-        if (m && m.error) {
-          console.error("worker error:", m.error);
-        }
-      });
-      worker.on("error", (err) => console.error("worker thread error:", err));
-      worker.on("exit", (code) => {
-        if (code !== 0) console.error("worker stopped with exit code", code);
-      });
-    } catch (err) {
-      console.error("Failed to spawn worker:", err);
-    }
+    await updateUser(userId.toString(), time, activity.createdAt);
   } catch (error) {
     throw error;
   }
