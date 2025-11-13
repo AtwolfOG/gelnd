@@ -1,7 +1,7 @@
 "use client";
 import Container from "@/components/container";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useReducer, type ChangeEvent } from "react";
+import { useEffect, useReducer, useRef, type ChangeEvent } from "react";
 import { PiBookOpenThin } from "react-icons/pi";
 import Cookies from "js-cookie";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -38,7 +38,8 @@ function reducer(
     case "entry":
       return { ...state, entry: action.entry ?? "" };
     case "time":
-      return { ...state, time: state.time + 1000 };
+      const time: number = Date.now();
+      return { ...state, time: time - (action.time ?? 0) };
     case "session":
       return {
         type: action.type ?? "",
@@ -61,6 +62,7 @@ function reducer(
 let timerId: NodeJS.Timeout;
 export default function CreateSession() {
   const searchParams = useSearchParams();
+  const startTime = useRef<number>(0);
   const [state, dispatch] = useReducer(reducer, {
     type: "",
     entry: "",
@@ -76,10 +78,11 @@ export default function CreateSession() {
     if (session) {
       const data = JSON.parse(session);
       const state = data.state;
+      startTime.current = state.time;
       dispatch({ types: "session", ...state, time: Date.now() - state.time });
       if (timerId) clearInterval(timerId);
       timerId = setInterval(() => {
-        dispatch({ types: "time" });
+        dispatch({ types: "time", time: startTime?.current });
       }, 1000);
     }
   }, [searchParams]);
@@ -109,17 +112,16 @@ export default function CreateSession() {
         }),
         { expires: 1 }
       );
+      toastSuccess("Session started");
+      startTime.current = Date.now();
       timerId = setInterval(() => {
-        dispatch({ types: "time" });
+        dispatch({ types: "time", time: startTime.current });
       }, 1000);
     } catch (err) {
-      toast.error(
-        (err instanceof Error && err.message) || "An error occoured",
-        {
-          autoClose: 3000,
-          transition: Bounce,
-        }
-      );
+      toast.error("Network error", {
+        autoClose: 3000,
+        transition: Bounce,
+      });
     }
   }
   async function handleDelete() {
@@ -127,25 +129,31 @@ export default function CreateSession() {
       clearInterval(timerId);
       await deleteSession();
       dispatch({ types: "start", started: false });
+      startTime.current = 0;
       toast.info("session deleted", {
         autoClose: 3000,
         closeOnClick: true,
         transition: Bounce,
       });
     } catch (err) {
-      toast.error((err instanceof Error && err.message) || "An error occourd", {
+      toast.error("An error occoured", {
         autoClose: 3000,
         transition: Bounce,
       });
     }
   }
   async function handleSave() {
-    if (!(state.time >= 60000))
-      return toastError("Your session has to be at least a minute");
-    clearInterval(timerId);
-    dispatch({ types: "start", started: false });
-    await saveSession(state.time);
-    toastSuccess("session saved");
+    try {
+      if (!(state.time >= 60000))
+        return toastError("Your session has to be at least a minute");
+      clearInterval(timerId);
+      startTime.current = 0;
+      dispatch({ types: "start", started: false });
+      await saveSession(state.time);
+      toastSuccess("session saved");
+    } catch (err) {
+      toastError("Network error");
+    }
   }
   return (
     <div className="max-w-[400px] grow">

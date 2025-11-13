@@ -64,7 +64,7 @@ export function Signout() {
     } catch (error) {
       let errorMsg = "An unexpected error occured";
       if (error instanceof Error) errorMsg = error.message;
-      toastError(errorMsg);
+      toastError("Network error");
     }
   }
   return (
