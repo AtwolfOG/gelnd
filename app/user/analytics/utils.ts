@@ -1,6 +1,6 @@
 export function getTime(minutes: number) {
   const hours = Math.floor(minutes / 60);
-  return hours ? `${hours}hr ${minutes}m` : `${Math.round(minutes)}m`;
+  return hours ? `${hours}hr ${minutes % 60}m` : `${Math.round(minutes)}m`;
 }
 
 export function getProgress(previous: number, current: number): string {
